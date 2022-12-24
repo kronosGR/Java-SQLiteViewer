@@ -2,6 +2,7 @@ package viewer;
 
 public class ApplicationRunner {
     public static void main(String[] args) {
-        new SQLiteViewer();
+        SQLiteViewer sql = new SQLiteViewer();
+        sql.setVisible(true);
     }
 }
