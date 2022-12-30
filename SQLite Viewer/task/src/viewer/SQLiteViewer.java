@@ -1,7 +1,15 @@
 package viewer;
 
+import org.sqlite.SQLiteDataSource;
+
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLiteViewer extends JFrame {
 
@@ -26,7 +34,7 @@ public class SQLiteViewer extends JFrame {
 
         JTextField jt = new JTextField();
         jt.setName("FileNameTextField");
-        jt.setBounds(10,10, 100, 50);
+        jt.setBounds(10, 10, 100, 50);
         jt.setColumns(50);
         p.add(jt);
 
@@ -48,9 +56,9 @@ public class SQLiteViewer extends JFrame {
         p2.setAlignmentY(Component.TOP_ALIGNMENT);
         add(p2);
 
-        JTextArea queryTextArea = new JTextArea(8,35);
-        queryTextArea.setName("QueryTextArea ");
-        queryTextArea.setEnabled(false);
+        JTextArea queryTextArea = new JTextArea(8, 35);
+        queryTextArea.setName("QueryTextArea");
+        queryTextArea.setEnabled(true);
         p2.add(queryTextArea);
 
 
@@ -59,5 +67,45 @@ public class SQLiteViewer extends JFrame {
         executeButton.setEnabled(false);
         p2.add(executeButton);
 
+        jb.addActionListener(actionEvent -> {
+            String filename = jt.getText().toString();
+            String cwd = System.getProperty("user.dir");
+            Path fp = Paths.get(cwd + "\\" + filename);
+            if (!jt.getText().equals("") && Files.exists(fp)) {
+
+                String url = String.format("jdbc:sqlite:%s", filename);
+                tablesComboBox.removeAllItems();
+                SQLiteDataSource ds = new SQLiteDataSource();
+                ds.setUrl(url);
+                try (Connection connection = ds.getConnection()) {
+                    List<String> tables = new ArrayList<>();
+                    Statement st = connection.createStatement();
+                    ResultSet resultSet = st.executeQuery("SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
+                    while (resultSet.next()) {
+                        String name = resultSet.getString("name");
+                        tables.add(name);
+                    }
+
+                    tables.forEach(tablesComboBox::addItem);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                tablesComboBox.removeAllItems();
+                queryTextArea.setText(null);
+                queryTextArea.setEnabled(false);
+                executeButton.setEnabled(false);
+                JOptionPane.showMessageDialog(
+                        new Frame(),
+                        "File doesn't exist!",
+                        "File error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
+        tablesComboBox.addItemListener(actionEvent -> {
+            queryTextArea.setText(String.format("SELECT * FROM %s;", actionEvent.getItem().toString()));
+        });
     }
 }
