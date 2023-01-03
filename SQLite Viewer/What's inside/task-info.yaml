@@ -334,6 +334,12 @@ files:
         }
     }
   learner_created: false
+- name: src/viewer/SQLite.java
+  visible: true
+  learner_created: true
+- name: firstDatabase.db
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/171/stages/887/implement#comment
 status: Unchecked
 record: -1

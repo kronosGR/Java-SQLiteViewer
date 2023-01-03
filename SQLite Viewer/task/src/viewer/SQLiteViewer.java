@@ -71,23 +71,13 @@ public class SQLiteViewer extends JFrame {
             String filename = jt.getText().toString();
             String cwd = System.getProperty("user.dir");
             Path fp = Paths.get(cwd + "\\" + filename);
-            if (!jt.getText().equals("") && Files.exists(fp)) {
-
-                String url = String.format("jdbc:sqlite:%s", filename);
+            if (!jt.getText().equals("") && Files.exists(fp))
+            {
                 tablesComboBox.removeAllItems();
-                SQLiteDataSource ds = new SQLiteDataSource();
-                ds.setUrl(url);
-                try (Connection connection = ds.getConnection()) {
-                    List<String> tables = new ArrayList<>();
-                    Statement st = connection.createStatement();
-                    ResultSet resultSet = st.executeQuery("SELECT name FROM sqlite_master WHERE type ='table' AND name NOT LIKE 'sqlite_%';");
-                    while (resultSet.next()) {
-                        String name = resultSet.getString("name");
-                        tables.add(name);
-                    }
-
-                    tables.forEach(tablesComboBox::addItem);
-                } catch (SQLException e) {
+                try ( SQLite sqLite = new SQLite(fp.toString())) {
+                    sqLite.getTables().forEach(tablesComboBox::addItem);
+                    queryTextArea.setText(String.format(SQLite.QUERY_SELECT_ALL, tablesComboBox.getSelectedItem()));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
