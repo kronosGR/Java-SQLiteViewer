@@ -7,7 +7,7 @@
     getContentPane().setBackground(Color.white);
 
 
-    TableModel tableModel = new MyTableModel();
+    viewer.TableModel tableModel = new MyTableModel();
 
     JTable table = new JTable(tableModel);
 
@@ -17,7 +17,7 @@
 
     tableModel.setValueAt("James", 0, 0);
 
-    final TableRowSorter&lt;TableModel&gt; sorter = new TableRowSorter&lt;TableModel&gt;(tableModel);
+    final TableRowSorter&lt;viewer.TableModel&gt; sorter = new TableRowSorter&lt;viewer.TableModel&gt;(tableModel);
     table.setRowSorter(sorter);
     sorter.setRowFilter(__________________);
 

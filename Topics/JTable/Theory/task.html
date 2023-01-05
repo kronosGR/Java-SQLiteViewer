@@ -2,7 +2,7 @@
 <html><body><p>The <code class="language-java">JTable</code> component can be used to represent tabular data in our GUI applications. Let's focus more on this Swing component.</p>
 <h5 id="creating-simple-tables">Creating simple tables</h5>
 <p>To set up a table, we will need to specify the columns of the table, as well as the data that is to be displayed in the table. The names of the columns are represented as an array of type <code class="language-java">String</code>, where each entry in the array is a new column. The data in the table is represented as a 2-D array, which is typically declared with the <code class="language-java">Object</code> type since each column might have a different data type in it.</p>
-<p>Every <code class="language-java">JTable</code> has an underlying <code class="language-java">TableModel</code> which is responsible for controlling the data contained within the table. It is possible to use the default <code class="language-java">TableModel</code> to construct a <code class="language-java">JTable</code>, however, it is preferred to implement a custom <code class="language-java">TableModel</code> which extends the <code class="language-java">AbstractTableModel</code> class. The reason for this is that it enables more control over the data contained in the table, and provides a natural extension to changing the table data later.</p>
+<p>Every <code class="language-java">JTable</code> has an underlying <code class="language-java">viewer.TableModel</code> which is responsible for controlling the data contained within the table. It is possible to use the default <code class="language-java">viewer.TableModel</code> to construct a <code class="language-java">JTable</code>, however, it is preferred to implement a custom <code class="language-java">viewer.TableModel</code> which extends the <code class="language-java">AbstractTableModel</code> class. The reason for this is that it enables more control over the data contained in the table, and provides a natural extension to changing the table data later.</p>
 <p>To extend the <code class="language-java">AbstractTableModel</code>, we need to implement <code class="language-java">getRowCount</code>, which returns the number of rows in the table, <code class="language-java">getColumnCount</code>, which returns the number of columns in the table, and <code class="language-java">getValueAt</code>, which defines how to retrieve a value from the table data. The code below shows an example of how these methods can be defined using an array of columns, and a 2-D array of data.</p>
 <pre><code class="language-java">class MyTableModel extends AbstractTableModel {
     String[] columns = {"Employee Name" , "Job Title" , "Salary"};
@@ -43,7 +43,7 @@
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.white);
 
-        TableModel tableModel = new MyTableModel();
+        viewer.TableModel tableModel = new MyTableModel();
 
         JTable table = new JTable(tableModel);
 
@@ -56,7 +56,7 @@
 <p>When we add the <code class="language-java">JTable</code> component, we typically choose to place it within a <code class="language-java">JScrollPane</code>. The main reason to do this is to ensure that if there is more table data than what can be contained on the screen, the user can scroll to view the remaining data. This results in a simple table of data as shown below.</p>
 <p style="text-align: center;"><img alt="" src="https://ucarecdn.com/506a0b87-e0b1-4251-9659-79e851328d00/"/></p>
 <h5 id="defaulttablemodel">DefaultTableModel</h5>
-<p>There is a standard class that implements <code class="language-java">AbstractTableModel</code> which is called <code class="language-java">DefaultTableModel</code>. It is often a short and convenient way to define <code class="language-java">TableModel</code>.</p>
+<p>There is a standard class that implements <code class="language-java">AbstractTableModel</code> which is called <code class="language-java">DefaultTableModel</code>. It is often a short and convenient way to define <code class="language-java">viewer.TableModel</code>.</p>
 <pre><code class="language-java">Object[] columns = new Object[] { "Name", "Race" };
 Object[][] data = new Object[][] {
     {"Frodo", "Hobbit"},
@@ -78,7 +78,7 @@ for (Object[] row : data) {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     getContentPane().setBackground(Color.white);
 
-    TableModel tableModel = new MyTableModel();
+    viewer.TableModel tableModel = new MyTableModel();
 
     JTable table = new JTable(tableModel);
 
@@ -105,7 +105,7 @@ for (Object[] row : data) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.white);
 
-        TableModel tableModel = new MyTableModel();
+        viewer.TableModel tableModel = new MyTableModel();
 
         JTable table = new JTable(tableModel);
         tableModel.addTableModelListener(new CustomListener()); //Adds the TableModelListener
@@ -164,7 +164,7 @@ class CustomListener implements TableModelListener {
         getContentPane().setBackground(Color.white);
 
 
-        TableModel tableModel = new MyTableModel();
+        viewer.TableModel tableModel = new MyTableModel();
 
         JTable table = new JTable(tableModel);
 
@@ -193,7 +193,7 @@ class CustomListener implements TableModelListener {
     getContentPane().setBackground(Color.white);
 
 
-    TableModel tableModel = new MyTableModel();
+    viewer.TableModel tableModel = new MyTableModel();
 
     JTable table = new JTable(tableModel);
 
@@ -213,7 +213,7 @@ class CustomListener implements TableModelListener {
     getContentPane().setBackground(Color.white);
 
 
-    TableModel tableModel = new MyTableModel();
+    viewer.TableModel tableModel = new MyTableModel();
 
     JTable table = new JTable(tableModel);
 
@@ -223,7 +223,7 @@ class CustomListener implements TableModelListener {
 
     tableModel.setValueAt("James", 0, 0);
 
-    final TableRowSorter&lt;TableModel&gt; sorter = new TableRowSorter&lt;&gt;(tableModel);
+    final TableRowSorter&lt;viewer.TableModel&gt; sorter = new TableRowSorter&lt;&gt;(tableModel);
     table.setRowSorter(sorter);
     sorter.setRowFilter(RowFilter.regexFilter("James"));
 

@@ -13,6 +13,8 @@ import java.util.List;
 
 public class SQLiteViewer extends JFrame {
 
+    private String dbLocation;
+
     public SQLiteViewer() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 900);
@@ -61,22 +63,33 @@ public class SQLiteViewer extends JFrame {
         queryTextArea.setEnabled(true);
         p2.add(queryTextArea);
 
-
         JButton executeButton = new JButton("Execute");
         executeButton.setName("ExecuteQueryButton");
-        executeButton.setEnabled(false);
+        executeButton.setEnabled(true);
         p2.add(executeButton);
+
+        JTable table = new JTable();
+        table.setName("Table");;
+        JScrollPane tableSCRPanel = new JScrollPane(table);
+        tableSCRPanel.setBounds(10, 250, 670, 400);
+        tableSCRPanel.setVisible(true);
+        table.setVisible(true);
+        add(tableSCRPanel);
+
 
         jb.addActionListener(actionEvent -> {
             String filename = jt.getText().toString();
             String cwd = System.getProperty("user.dir");
             Path fp = Paths.get(cwd + "\\" + filename);
+            dbLocation = fp.toString();
             if (!jt.getText().equals("") && Files.exists(fp))
             {
                 tablesComboBox.removeAllItems();
-                try ( SQLite sqLite = new SQLite(fp.toString())) {
+                try ( SQLite sqLite = new SQLite(dbLocation)) {
                     sqLite.getTables().forEach(tablesComboBox::addItem);
                     queryTextArea.setText(String.format(SQLite.QUERY_SELECT_ALL, tablesComboBox.getSelectedItem()));
+                    executeButton.setEnabled(true);
+                    queryTextArea.setEnabled(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -96,6 +109,21 @@ public class SQLiteViewer extends JFrame {
 
         tablesComboBox.addItemListener(actionEvent -> {
             queryTextArea.setText(String.format("SELECT * FROM %s;", actionEvent.getItem().toString()));
+        });
+
+        executeButton.addActionListener( event ->{
+            try (SQLite sqLite = new SQLite(dbLocation)){
+                TableModel tableModel = sqLite.executeQuery(queryTextArea.getText(),
+                        (String) tablesComboBox.getSelectedItem());
+                table.setModel(tableModel);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        new Frame(),
+                        e.getMessage(),
+                        "SQL error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         });
     }
 }
