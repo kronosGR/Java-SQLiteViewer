@@ -60,12 +60,12 @@ public class SQLiteViewer extends JFrame {
 
         JTextArea queryTextArea = new JTextArea(8, 35);
         queryTextArea.setName("QueryTextArea");
-        queryTextArea.setEnabled(true);
+        queryTextArea.setEnabled(false);
         p2.add(queryTextArea);
 
         JButton executeButton = new JButton("Execute");
         executeButton.setName("ExecuteQueryButton");
-        executeButton.setEnabled(true);
+        executeButton.setEnabled(false);
         p2.add(executeButton);
 
         JTable table = new JTable();
